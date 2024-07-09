@@ -22,6 +22,11 @@ public class LaboratoryController {
         this.laboratoryService = laboratoryService;
     }
 
+    /**
+     * Example controller method that get string message with input param names 'name'
+     * @param request Object that obtain the value called "name"
+     * @return Object String with the message 'Hello World {"name"}'
+     */
     @RequestMapping(value = "/example", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
