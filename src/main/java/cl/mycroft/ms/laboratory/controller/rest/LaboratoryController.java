@@ -1,7 +1,7 @@
-package cl.mycroft.ms.laboratory.controller;
+package cl.mycroft.ms.laboratory.controller.rest;
 
-import cl.mycroft.ms.laboratory.bean.ControllerRequest;
-import cl.mycroft.ms.laboratory.bean.ControllerResponse;
+import cl.mycroft.ms.laboratory.bean.rest.ControllerRequest;
+import cl.mycroft.ms.laboratory.bean.rest.ControllerResponse;
 import cl.mycroft.ms.laboratory.service.LaboratoryService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package cl.mycroft.ms.laboratory.bean;
+package cl.mycroft.ms.laboratory.bean.rest;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
