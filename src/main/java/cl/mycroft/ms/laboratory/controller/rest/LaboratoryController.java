@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/api/v1/main")
+@RequestMapping("/api/v1/laboratory")
 public class LaboratoryController {
 
     private final LaboratoryService laboratoryService;
@@ -27,7 +27,7 @@ public class LaboratoryController {
      * @param request Object that obtain the value called "name"
      * @return Object String with the message 'Hello World {"name"}'
      */
-    @RequestMapping(value = "/example", method = RequestMethod.POST,
+    @PostMapping(value = "/example",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ControllerResponse> example(@RequestBody @Valid ControllerRequest request) {
