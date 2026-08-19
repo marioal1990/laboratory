@@ -29,7 +29,6 @@ BEGIN
         );
 
         -- Poblar tabla
-
         INSERT INTO lab_producto(pro_sku, pro_nombre, pro_stock, pro_precio)
             values ('SKU-PANA-001', 'Pan', 50, 150.0),
                    ('SKU-BEB-002', 'Bebida', 50, 1250.0),

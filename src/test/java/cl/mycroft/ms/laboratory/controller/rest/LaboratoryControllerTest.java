@@ -29,6 +29,7 @@ class LaboratoryControllerTest {
 
     @BeforeEach
     void setUp() {
+        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "info");
     }
 
     @Test
