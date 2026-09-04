@@ -1,7 +1,7 @@
 package cl.mycroft.ms.laboratory.controller.rest;
 
 import cl.mycroft.ms.laboratory.bean.rest.ControllerResponse;
-import cl.mycroft.ms.laboratory.model.entity.Producto;
+import cl.mycroft.ms.laboratory.bean.Producto;
 import cl.mycroft.ms.laboratory.service.ProductoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;

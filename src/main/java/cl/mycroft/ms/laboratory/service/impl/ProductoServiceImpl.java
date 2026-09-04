@@ -1,62 +1,52 @@
 package cl.mycroft.ms.laboratory.service.impl;
 
-import cl.mycroft.ms.laboratory.model.entity.Producto;
-import cl.mycroft.ms.laboratory.model.repository.ProductoRepository;
+import cl.mycroft.ms.laboratory.bean.Producto;
+import cl.mycroft.ms.laboratory.bean.rest.ControllerResponse;
 import cl.mycroft.ms.laboratory.service.ProductoService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
 public class ProductoServiceImpl implements ProductoService {
 
-    private final ProductoRepository productoRepository;
+    @Value("${msproductos.url.host}")
+    private String host;
 
-    @Autowired
-    public ProductoServiceImpl(ProductoRepository productoRepository) {
-        this.productoRepository = productoRepository;
-    }
-
-    @Override
-    public List<Producto> getList() {
-        return (List<Producto>) this.productoRepository.findAll();
-    }
+    @Value("${msproductos.url.get.getList}")
+    private String getList;
 
     @Override
-    public Optional<Producto> getById(String id) {
-        return this.productoRepository.findBySku(id);
-    }
+    public List<Producto> getList() throws Exception {
+        log.debug("ProductoService.getList()");
 
-    @Override
-    public Optional<Producto> getByFilter(String filter) {
-        return Optional.empty();
-    }
+        log.info("Calling REST GET{}", host + getList);
 
-    @Override
-    public Optional<Producto> getByFilter(String filter, int page, int pageSize) {
-        return Optional.empty();
-    }
+        WebClient webClient = WebClient.create(host);
+        String response = webClient.get()
+                .uri(getList)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
 
-    @Override
-    public Optional<Producto> insert(String object) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        Producto producto = mapper.readValue(object, Producto.class);
-        return Optional.of(this.productoRepository.save(producto));
-    }
+        ControllerResponse controllerResponse = mapper.readValue(response, ControllerResponse.class);
 
-    @Override
-    public Optional<Producto> update(String object) {
-        return Optional.empty();
-    }
-
-    @Override
-    public void delete(String id) {
-        log.info("delete");
+        if (controllerResponse != null) {
+            if (controllerResponse.getCode() == HttpStatus.OK.value()) {
+                return mapper.readValue(controllerResponse.getMessage(), List.class);
+            } else {
+                throw new Exception(controllerResponse.getMessage());
+            }
+        } else {
+            return new ArrayList<>();
+        }
     }
 }
