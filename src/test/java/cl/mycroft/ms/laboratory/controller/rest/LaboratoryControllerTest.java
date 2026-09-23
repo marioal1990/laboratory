@@ -1,7 +1,7 @@
 package cl.mycroft.ms.laboratory.controller.rest;
 
-import cl.mycroft.ms.laboratory.bean.rest.ControllerRequest;
-import cl.mycroft.ms.laboratory.bean.rest.ControllerResponse;
+import cl.mycroft.ms.laboratory.bean.dto.ControllerRequest;
+import cl.mycroft.ms.laboratory.bean.dto.ControllerResponse;
 import cl.mycroft.ms.laboratory.service.LaboratoryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,21 +34,19 @@ class LaboratoryControllerTest {
 
     @Test
     void exampleSucess() {
-        ControllerRequest request = new ControllerRequest();
-        request.setName("mami dika");
+        ControllerRequest request = new ControllerRequest("mami dika");
         when(laboratoryService.example(anyString())).thenReturn("Hello World mami dika");
         ResponseEntity<ControllerResponse> responseEntity = laboratoryController.example(request);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals("Hello World mami dika", Objects.requireNonNull(responseEntity.getBody()).getMessage());
+        assertEquals("Hello World mami dika", Objects.requireNonNull(responseEntity.getBody()).message());
     }
 
     @Test
     void exampleFailure() {
-        ControllerRequest request = new ControllerRequest();
-        request.setName("mami dika");
+        ControllerRequest request = new ControllerRequest("mami dika");
         when(laboratoryService.example(anyString())).thenThrow(new RuntimeException("Service Error"));
         ResponseEntity<ControllerResponse> responseEntity = laboratoryController.example(request);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
-        assertEquals("Service Error", Objects.requireNonNull(responseEntity.getBody()).getMessage());
+        assertEquals("Service Error", Objects.requireNonNull(responseEntity.getBody()).message());
     }
 }

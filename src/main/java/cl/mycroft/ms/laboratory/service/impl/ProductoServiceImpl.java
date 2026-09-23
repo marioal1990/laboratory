@@ -1,7 +1,7 @@
 package cl.mycroft.ms.laboratory.service.impl;
 
 import cl.mycroft.ms.laboratory.bean.Producto;
-import cl.mycroft.ms.laboratory.bean.rest.ControllerResponse;
+import cl.mycroft.ms.laboratory.bean.dto.ControllerResponse;
 import cl.mycroft.ms.laboratory.service.ProductoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -30,20 +30,27 @@ public class ProductoServiceImpl implements ProductoService {
         log.info("Calling REST GET{}", host + getList);
 
         WebClient webClient = WebClient.create(host);
-        String response = webClient.get()
-                .uri(getList)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
+        String response;
+        try {
+            response = webClient.get()
+                    .uri(getList)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+        } catch (Exception e) {
+            response = String.format("No se pudo conectar al API GET %s%s", host, getList);
+            log.error(response);
+            throw new Exception(response);
+        }
 
         ObjectMapper mapper = new ObjectMapper();
         ControllerResponse controllerResponse = mapper.readValue(response, ControllerResponse.class);
 
         if (controllerResponse != null) {
-            if (controllerResponse.getCode() == HttpStatus.OK.value()) {
-                return mapper.readValue(controllerResponse.getMessage(), List.class);
+            if (controllerResponse.code() == HttpStatus.OK.value()) {
+                return mapper.readValue(controllerResponse.message(), List.class);
             } else {
-                throw new Exception(controllerResponse.getMessage());
+                throw new Exception(controllerResponse.message());
             }
         } else {
             return new ArrayList<>();

@@ -1,6 +1,6 @@
 package cl.mycroft.ms.laboratory.controller.rest;
 
-import cl.mycroft.ms.laboratory.bean.rest.ControllerResponse;
+import cl.mycroft.ms.laboratory.bean.dto.ControllerResponse;
 import cl.mycroft.ms.laboratory.bean.Producto;
 import cl.mycroft.ms.laboratory.service.ProductoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,19 +29,16 @@ public class ProductoController {
     @GetMapping(value = "/productos", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ControllerResponse> getProductos() {
         log.info("GET productos");
-        ControllerResponse controllerResponse = new ControllerResponse();
+        ControllerResponse controllerResponse;
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             List<Producto> lista = this.productoService.getList();
             String response = objectMapper.writeValueAsString(lista);
-            controllerResponse.setCode(HttpStatus.OK.value());
-            controllerResponse.setMessage(response);
+            controllerResponse = new ControllerResponse(HttpStatus.OK.value(), response);
         } catch (Exception e) {
-            controllerResponse = new ControllerResponse();
-            controllerResponse.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            controllerResponse.setMessage(e.getMessage());
+            controllerResponse = new ControllerResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
-        return new ResponseEntity<>(controllerResponse, HttpStatus.valueOf(controllerResponse.getCode()));
+        return new ResponseEntity<>(controllerResponse, HttpStatus.valueOf(controllerResponse.code()));
     }
 
 

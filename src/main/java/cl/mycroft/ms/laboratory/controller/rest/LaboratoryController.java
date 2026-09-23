@@ -1,7 +1,7 @@
 package cl.mycroft.ms.laboratory.controller.rest;
 
-import cl.mycroft.ms.laboratory.bean.rest.ControllerRequest;
-import cl.mycroft.ms.laboratory.bean.rest.ControllerResponse;
+import cl.mycroft.ms.laboratory.bean.dto.ControllerRequest;
+import cl.mycroft.ms.laboratory.bean.dto.ControllerResponse;
 import cl.mycroft.ms.laboratory.service.LaboratoryService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -34,15 +34,11 @@ public class LaboratoryController {
         log.info("requests: {}", request.toString());
         ControllerResponse controllerResponse;
         try {
-            String response = laboratoryService.example(request.getName());
-            controllerResponse = new ControllerResponse();
-            controllerResponse.setCode(HttpStatus.OK.value());
-            controllerResponse.setMessage(response);
+            String response = laboratoryService.example(request.name());
+            controllerResponse = new ControllerResponse(HttpStatus.OK.value(), response);
         } catch (Exception e) {
-            controllerResponse = new ControllerResponse();
-            controllerResponse.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            controllerResponse.setMessage(e.getMessage());
+            controllerResponse = new ControllerResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
-        return new ResponseEntity<>(controllerResponse, HttpStatus.valueOf(controllerResponse.getCode()));
+        return new ResponseEntity<>(controllerResponse, HttpStatus.valueOf(controllerResponse.code()));
     }
 }
