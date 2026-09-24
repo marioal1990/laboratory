@@ -2,11 +2,11 @@ package cl.mycroft.ms.laboratory.service.impl;
 
 import cl.mycroft.ms.laboratory.bean.Producto;
 import cl.mycroft.ms.laboratory.bean.dto.ControllerResponse;
+import cl.mycroft.ms.laboratory.bean.exception.ApiRestNotFoundException;
 import cl.mycroft.ms.laboratory.service.ProductoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -27,7 +27,7 @@ public class ProductoServiceImpl implements ProductoService {
     public List<Producto> getList() throws Exception {
         log.debug("ProductoService.getList()");
 
-        log.info("Calling REST GET{}", host + getList);
+        log.info("Calling REST GET {}", host + getList);
 
         WebClient webClient = WebClient.create(host);
         String response;
@@ -38,22 +38,12 @@ public class ProductoServiceImpl implements ProductoService {
                     .bodyToMono(String.class)
                     .block();
         } catch (Exception e) {
-            response = String.format("No se pudo conectar al API GET %s%s", host, getList);
-            log.error(response);
-            throw new Exception(response);
+            log.error("No se pudo conectar al API GET {}{}", host, getList);
+            throw new ApiRestNotFoundException(host, getList);
         }
 
         ObjectMapper mapper = new ObjectMapper();
         ControllerResponse controllerResponse = mapper.readValue(response, ControllerResponse.class);
-
-        if (controllerResponse != null) {
-            if (controllerResponse.code() == HttpStatus.OK.value()) {
-                return mapper.readValue(controllerResponse.message(), List.class);
-            } else {
-                throw new Exception(controllerResponse.message());
-            }
-        } else {
-            return new ArrayList<>();
-        }
+        return mapper.readValue(controllerResponse.message(), ArrayList.class);
     }
 }
