@@ -3,6 +3,8 @@ package cl.mycroft.ms.laboratory.service;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.function.ToIntFunction;
+
 @Service
 public class LaboratoryService {
 
@@ -17,6 +19,7 @@ public class LaboratoryService {
         }
 
         name = switch (name) {
+            case "function", "Function", "FUNCTION" -> calculaNameConFunction(name).toString();
             case "A", "B" -> "primeras 2 letras";
             case "C", "D" -> "segundas 2 letras";
             case "SQL" -> """
@@ -39,5 +42,11 @@ public class LaboratoryService {
         };
 
         return String.format("Hello World %s", name);
+    }
+
+    private Integer calculaNameConFunction(String name) {
+        String entrada = "Esto es un ejemplo de entrada y que junto al valor de name es %s";
+        ToIntFunction<String> resultado = String::length;
+        return resultado.applyAsInt(String.format(entrada, name));
     }
 }
