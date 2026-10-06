@@ -4,23 +4,18 @@ import cl.mycroft.ms.laboratory.bean.dto.ControllerRequest;
 import cl.mycroft.ms.laboratory.bean.dto.ControllerResponse;
 import cl.mycroft.ms.laboratory.service.LaboratoryService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
-@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/v1/laboratory")
+@RequiredArgsConstructor
 public class LaboratoryController {
 
     private final LaboratoryService laboratoryService;
-
-    @Autowired
-    public LaboratoryController(final LaboratoryService laboratoryService) {
-        this.laboratoryService = laboratoryService;
-    }
 
     /**
      * Example controller method that get string message with input param names 'name'
